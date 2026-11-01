@@ -1,0 +1,14 @@
+EtymoGraph
+Copyright 2026 cassiadev
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE),
+except for the following parts, which keep their own licenses:
+
+- Etymology data in composeApp/src/commonMain/kotlin/io/github/etymograph/data/SampleData.kt
+  is summarized and adapted (in Korean) from English Wiktionary entries and is licensed under
+  CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). The source page of each word
+  and relation is linked in the data and shown in the app.
+
+- Fonts in composeApp/src/commonMain/composeResources/font/ are Noto Serif and a subset of
+  Noto Sans KR, licensed under the SIL Open Font License, Version 1.1
+  (licenses/NotoSerif-OFL.txt, licenses/NotoSansKR-OFL.txt).
