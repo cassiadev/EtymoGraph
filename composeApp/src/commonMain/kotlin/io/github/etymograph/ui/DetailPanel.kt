@@ -143,7 +143,9 @@ fun DetailPanel(
         Section("출처") {
             word.sourceUrls.forEach { SourceLink(it) }
             Text(
-                "어원 정보는 Wiktionary 항목을 한국어로 요약·가공한 것으로, CC BY-SA 4.0(저작자표시-동일조건변경허락)에 따라 제공합니다.",
+                "어원 정보 중 Wiktionary 항목을 한국어로 요약·가공한 부분의 원저작자는 각 항목의 기여자입니다. " +
+                    "일부 설명은 다른 사전과 자료도 참고했으며, 출처는 단어와 관계마다 표시합니다.\n" +
+                    "어원 데이터는 CC BY-SA 4.0(저작자표시-동일조건변경허락)으로 배포합니다.",
                 color = Palette.InkMuted,
                 fontSize = 11.sp,
                 lineHeight = 16.sp,

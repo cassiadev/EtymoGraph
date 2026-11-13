@@ -184,7 +184,7 @@ composeApp/src/
 ## 데이터와 출처
 
 - 단어 53개와 관계 51개. 모든 단어와 관계에 출처 링크가 있으며, 단위 테스트가 이를 확인합니다.
-- 내용은 영어 Wiktionary 항목을 한국어로 요약·가공한 것입니다. 원문을 그대로 옮기지 않았고, 앱 상세 패널과 이 문서에 출처를 표시합니다.
+- 내용은 영어 Wiktionary 항목을 한국어로 요약·가공한 것이고, 일부 설명은 다른 사전과 자료도 참고했습니다. 원문을 그대로 옮기지 않았고, 앱 상세 패널과 이 문서에 출처를 표시합니다.
 - verse·versed·versatile, weave·web, wedge·potato wedges, prescient·science·omniscient 네 묶음은 Merriam-Webster와 American Heritage Dictionary 등으로 대조했습니다.
 - 중간 단계 형태(중세 영어 fader, 서게르만 조어 *fader 등)는 노드로 만들지 않고 관계 설명에 "~를 거쳐"로 적었습니다.
 - **courtier는 차용과 파생을 나눠 연결했습니다**: courtier ←(차용) 앵글로노르만어 corteour ←(파생) 고대 프랑스어 cort.
@@ -205,8 +205,9 @@ composeApp/src/
 
 ### 데이터 라이선스
 
-- 어원 데이터(`SampleData.kt`의 한국어 설명)는 Wiktionary 항목을 요약·가공한 것입니다. 원 자료의 라이선스에 맞춰 [CC BY-SA 4.0(저작자표시-동일조건변경허락)](https://creativecommons.org/licenses/by-sa/4.0/deed.ko)으로 배포합니다.
-- 저작자는 각 항목의 Wiktionary 기여자입니다. 출처는 단어·관계마다 연결한 페이지이고, 변경 사항은 '한국어로 요약·가공'입니다. 앱 상세 패널에도 같은 고지와 라이선스 링크를 표시합니다.
+- 어원 데이터(`SampleData.kt`의 한국어 설명)는 [CC BY-SA 4.0(저작자표시-동일조건변경허락)](https://creativecommons.org/licenses/by-sa/4.0/deed.ko)으로 배포합니다. Wiktionary 항목을 요약·가공한 부분이 있어 원 자료의 라이선스에 맞췄습니다.
+- Wiktionary에서 요약·가공한 부분의 원저작자는 각 항목의 기여자입니다. 출처는 단어·관계마다 연결한 페이지이고, 변경 사항은 '한국어로 요약·가공'입니다. 앱 상세 패널에도 같은 고지와 라이선스 링크를 표시합니다.
+- 일부 설명은 다른 사전과 자료도 참고했으며, 그 출처도 단어·관계마다 연결했습니다.
 - 데이터를 수정해 다시 배포할 때도 같은 라이선스와 출처 표시를 유지해야 합니다.
 - 코드는 Apache License 2.0입니다(`LICENSE`). 저작권 표시와 예외(어원 데이터, 글꼴)는 `NOTICE`에 적었습니다.
 - 글꼴(Noto Serif, Noto Sans KR 부분집합)은 SIL Open Font License 1.1입니다(`licenses/`).
