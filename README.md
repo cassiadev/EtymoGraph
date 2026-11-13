@@ -216,7 +216,7 @@ composeApp/src/
 
 | 항목 | 방법 | 결과 |
 |---|---|---|
-| 단위 테스트 42개 | `./gradlew :composeApp:wasmJsTest`, Karma + Chrome Headless 156 | 42개 통과, 실패 0. 두 손가락 제스처 회귀 테스트와 같은 단어 재검색 회귀 테스트는 수정 전 코드로 되돌리면 실패하는 것도 확인 |
+| 단위 테스트 43개 | `./gradlew :composeApp:wasmJsTest`, Karma + Chrome Headless 157 | 43개 통과, 실패 0(2026-11-13, JBR 25.0.4에서 다시 실행). 두 손가락 제스처 회귀 테스트와 같은 단어 재검색 회귀 테스트는 수정 전 코드로 되돌리면 실패하는 것도 확인 |
 | 배포용 Wasm 빌드 | `./gradlew :composeApp:wasmJsBrowserDistribution` | 성공. 앱 Wasm 2.9MB + skiko.wasm 8.6MB + JS 0.3MB. webpack이 경고 3건을 보고했지만 Gradle 출력에 내용이 나오지 않아 확인하지 못함 |
 | 개발용 웹 빌드 실행 | `wasmJsBrowserDevelopmentRun` | 성공 (http://localhost:8080) |
 | 시나리오 A: 검색과 탐색 | Claude 데스크톱 앱 내장 브라우저(Chromium 152), 배포 빌드, 시대 층 디자인 적용 후 다시 확인 | 통과. father 검색 → 4개 노드가 층·칸에 맞춰 표시 → fæder·*fadēr·pater·paternālis를 차례로 펼침(기존 노드 위치 유지, 새 노드가 보이도록 화면 이동) → 선택한 단어의 계보가 붉게, 상세 패널 계보가 단계로 표시 |

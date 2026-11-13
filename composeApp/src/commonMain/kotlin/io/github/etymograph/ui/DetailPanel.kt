@@ -299,11 +299,14 @@ private fun SourceLink(url: String, fontSize: Int = 13, label: String = sourceLa
 
 /** "https://en.wiktionary.org/wiki/père#French" → "Wiktionary · père (French)" */
 internal fun sourceLabelOf(url: String): String {
-    val (site, marker) = when {
-        "wiktionary.org" in url -> "Wiktionary" to "/wiki/"
-        "wikipedia.org" in url -> "Wikipedia" to "/wiki/"
-        "anglo-norman.net" in url -> "Anglo-Norman Dictionary" to "/entry/"
-        "dictionary.com" in url -> "Dictionary.com" to "/browse/"
+    val host = url.substringAfter("://").substringBefore('/').removePrefix("www.")
+    val (site, marker) = when (host) {
+        "en.wiktionary.org" -> "Wiktionary" to "/wiki/"
+        "en.wikipedia.org" -> "Wikipedia" to "/wiki/"
+        "anglo-norman.net" -> "Anglo-Norman Dictionary" to "/entry/"
+        "dictionary.com" -> "Dictionary.com" to "/browse/"
+        "ahdictionary.com" -> "American Heritage Dictionary" to "?q="
+        "merriam-webster.com" -> "Merriam-Webster" to "/dictionary/"
         else -> return url
     }
     val title = url.substringAfter(marker).replace("%27", "'").replace('_', ' ')
