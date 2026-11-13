@@ -25,6 +25,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -90,6 +93,7 @@ import kotlinx.coroutines.launch
 // GraphLayout.MIN_DX는 이 폭에 여백을 더한 값이다. 노드는 상자 없이 글자만 그리지만, 누르는 영역과 선이 닿는 자리는 이 크기다.
 internal val NodeWidth = 136.dp
 internal val NodeHeight = 62.dp
+private val HeadwordAutoSize = TextAutoSize.StepBased(minFontSize = 17.sp, maxFontSize = 21.sp, stepSize = 0.5.sp)
 
 /** 어파 칸이 노드 둘레로 띄우는 여백과 세로 범위(월드 좌표). 칸은 어파 조어 층부터 아래로 둔다. */
 private const val LANE_PAD = 14f
@@ -462,15 +466,20 @@ private fun WordNodeLabel(
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
+            BasicText(
                 displayTextOf(word.word),
-                fontFamily = LocalHeadwordFont.current,
-                fontSize = 21.sp,
-                fontWeight = FontWeight.SemiBold,
-                // 재구형은 * 표기에 더해 옅은 잉크로 문헌에 없는 형태임을 드러낸다.
-                color = if (word.reconstructed) Palette.InkMuted else Palette.Ink,
+                style = LocalTextStyle.current.copy(
+                    fontFamily = LocalHeadwordFont.current,
+                    fontWeight = FontWeight.SemiBold,
+                    // 재구형은 * 표기에 더해 옅은 잉크로 문헌에 없는 형태임을 드러낸다.
+                    color = if (word.reconstructed) Palette.InkMuted else Palette.Ink,
+                ),
+                autoSize = HeadwordAutoSize,
+                softWrap = false,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                // Skia는 말줄임 여부를 보고하지 않아 글자가 실제로 차지하는 폭을 기준으로 맞춘다.
+                // shortcut: 17sp로도 넘치는 표제어는 말줄임 없이 잘린다. 더 긴 단어가 생기면 노드 폭을 다시 정한다.
+                overflow = TextOverflow.Clip,
                 modifier = Modifier.drawBehind {
                     val y = size.height - 1.dp.toPx()
                     when {
