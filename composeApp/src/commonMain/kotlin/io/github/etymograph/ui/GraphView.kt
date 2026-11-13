@@ -580,7 +580,11 @@ private fun EmptyHint(onStart: (String) -> Unit, modifier: Modifier = Modifier) 
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.size(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Row에서는 좁은 화면에서 마지막 버튼이 글자 단위로 줄바꿈된다.
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
             listOf("en:father" to "father", "en:court" to "court", "en:courier" to "courier").forEach { (id, label) ->
                 WordButton(label) { onStart(id) }
             }
