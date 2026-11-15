@@ -564,7 +564,11 @@ private fun ZoomButton(label: String, description: String, fontSize: TextUnit = 
 
 @Composable
 private fun EmptyHint(onStart: (String) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier.padding(24.dp).widthIn(max = 440.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    // 내용이 영역보다 길면 FlowRow가 넘치는 버튼 줄을 그리지 않는다. 그때는 세로로 움직여 볼 수 있게 한다.
+    Column(
+        modifier.verticalScroll(rememberScrollState()).padding(24.dp).widthIn(max = 440.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text(
             "어디서부터 거슬러 올라갈까요?",
             fontFamily = LocalHeadwordFont.current,
@@ -585,7 +589,11 @@ private fun EmptyHint(onStart: (String) -> Unit, modifier: Modifier = Modifier) 
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            listOf("en:father" to "father", "en:court" to "court", "en:courier" to "courier").forEach { (id, label) ->
+            // 단어 계열마다 하나씩 둔다.
+            listOf(
+                "en:father" to "father", "en:court" to "court", "en:courier" to "courier",
+                "en:verse" to "verse", "en:weave" to "weave", "en:wedge" to "wedge", "en:science" to "science",
+            ).forEach { (id, label) ->
                 WordButton(label) { onStart(id) }
             }
         }
