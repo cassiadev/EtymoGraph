@@ -56,7 +56,7 @@ enum class RelationType(val labelKo: String, val etymological: Boolean, val dire
     INHERITED_FROM("계승", etymological = true, directed = true),
     BORROWED_FROM("차용", etymological = true, directed = true),
 
-    /** 같은 언어 안에서 접사를 붙여 만든 말. 사양서의 유형 목록에 없어 추가했다(예: pater → paternālis). */
+    /** 같은 언어 안에서 접사, 분사 활용, 합성 등으로 만들어진 형태(예: pater → paternālis). */
     DERIVED_FROM("파생", etymological = true, directed = true),
     COGNATE_OF("동계어", etymological = true, directed = false),
 

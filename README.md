@@ -1,6 +1,6 @@
 # EtymoGraph
 
-단어 하나에서 시작해 언어와 시대를 넘나드는 어원 지도를 펼쳐 보는 학습 앱입니다. 지금은 출처를 확인한 표본 데이터(단어 28개, 관계 32개)로 동작합니다.
+단어 하나에서 시작해 언어와 시대를 넘나드는 어원 지도를 펼쳐 보는 학습 앱입니다. 지금은 출처를 확인한 표본 데이터(단어 53개, 관계 51개)로 동작합니다.
 Kotlin Multiplatform(KMP)과 Compose Multiplatform(CMP)으로 만들고, 브라우저에서는 Kotlin/Wasm(WebAssembly)으로 실행합니다.
 
 ## 실행 방법
@@ -102,7 +102,7 @@ python3 -I scripts/update_korean_font.py
   - 어족이 색상을 정합니다. 게르만어파는 푸른 계열, 이탈리아어파는 붉은 흙빛 계열입니다. 어파 칸도 같은 색상을 아주 옅게 씁니다.
   - 시대가 명도를 정합니다. 현대어는 진하게, 옛 단계는 옅게, 조어는 회색에 가깝게 씁니다.
 - **글꼴**:
-  - 표제어(지도의 단어, 상세 패널 제목, 계보, 검색 결과)에는 세리프 Noto Serif를 씁니다. 나머지는 기본 글꼴이고, 한글은 앱에 쓰는 글자만 담은 Noto Sans KR 부분집합(70KB)으로 채웁니다.
+  - 표제어(지도의 단어, 상세 패널 제목, 계보, 검색 결과)에는 세리프 Noto Serif를 씁니다. 나머지는 기본 글꼴이고, 한글은 앱에 쓰는 글자만 담은 Noto Sans KR 부분집합으로 채웁니다.
   - 시작할 때 이 한글 글꼴과 Noto Serif를 미리 불러와 빠진 글자의 대체 글꼴로 등록한 뒤 화면을 그립니다. 그동안(첫 방문 때 약 1초)은 빈 종이색 화면입니다. 발음 기호(ɑ, ð, ə 등)는 Noto Serif에서 채워집니다.
   - 두 글꼴에 모두 없는 ✓는 글자 대신 초록 원 안의 체크로 그립니다.
   - Noto Serif를 고른 이유는 표제어의 옛 문자(ḗ, ḱ, æ, þ, ā)를 모두 갖춘 세리프가 이것뿐이었기 때문입니다. Source Serif 4는 ḗ·ḱ, Literata는 ḱ가 없었습니다.
@@ -116,7 +116,7 @@ python3 -I scripts/update_korean_font.py
 |---|---|---|
 | `INHERITED_FROM` | 조상 언어 형태에서 계승 | 잉크색 실선 + 화살표(조상 → 후대) |
 | `BORROWED_FROM` | 다른 언어에서 차용 | 잉크색 파선 + 화살표(출처 → 받아들인 말) |
-| `DERIVED_FROM` | 같은 언어 안에서 접사로 파생 (사양서에 없어 추가) | 잉크색 점선 + 화살표 |
+| `DERIVED_FROM` | 같은 언어 안에서 접사, 분사 활용, 합성 등으로 형성 | 잉크색 점선 + 화살표 |
 | `COGNATE_OF` | 공통 조상을 가진 동계어 | 파란 점선, 화살표 없음 |
 | `SIMILAR_FORM` | 철자만 비슷함. 어원이 같다는 주장도 다르다는 주장도 아님 | 보라 일점쇄선(긴 선과 점의 반복). 사양의 점선을 동계어·파생의 점선과 구분하려고 섞었고, 라벨을 늘 붙임 |
 | `TRANSLATION_EQUIVALENT` | 번역·의미 대응 (이번 데이터에는 없음) | 옅은 회색 긴 파선 |
@@ -134,7 +134,7 @@ KMP 공식 생성기(kmp.jetbrains.com)가 만드는 `composeApp` 모듈 구조�
 composeApp/src/
 ├── commonMain/kotlin/io/github/etymograph/
 │   ├── model/        Model.kt (WordNode, RelationEdge, RelationType, Language, Era, LanguageFamily), Lexicon.kt (조회·검색·계보·무결성 검사)
-│   ├── data/         SampleData.kt (검증한 28개 단어와 32개 관계, 출처 URL)
+│   ├── data/         SampleData.kt (단어, 관계, 출처 링크)
 │   ├── graph/        GraphLayout.kt (시대 층·어파 칸에 맞춘 결정적 증분 배치)
 │   ├── explorer/     ExplorerState.kt (펼친 지도 상태와 순수 상태 전환 함수)
 │   ├── ui/           Viewport.kt (이동·확대 상태, 화면 맞춤 계산), FocusTracker.kt (화면에 보여야 할 노드 선택),
@@ -174,7 +174,7 @@ composeApp/src/
 | Compose Material (Material 2) | 1.12.2 | CMP 1.12.2와 짝을 이루는 Material3는 `1.12.0-alpha03` 알파 버전뿐이라, 안정판인 Material 2를 사용 |
 | Compose Resources (`components-resources`) | 1.12.2 | 번들한 표제어 글꼴을 웹에서 불러오기 위해 사용 |
 | Noto Serif (글꼴 파일, 가변 글꼴 1.9MB) | Google Fonts 저장소 판 | 표제어용 세리프. SIL Open Font License 1.1, `licenses/NotoSerif-OFL.txt` |
-| Noto Sans KR (글꼴 부분집합 70KB) | Google Fonts API, 2026-11-02 | 앱에 쓰는 한글 454자와 화살표 2개만 담음. SIL Open Font License 1.1, `licenses/NotoSansKR-OFL.txt` |
+| Noto Sans KR (글꼴 부분집합) | Google Fonts API | 앱에 쓰는 한글과 화살표 2개만 담음. SIL Open Font License 1.1, `licenses/NotoSansKR-OFL.txt` |
 | kotlin-test | 2.4.21 | 공통 단위 테스트 |
 | kotlinx-coroutines-test (테스트 전용) | 1.9.0 | 화면 움직임 애니메이션을 가상 프레임으로 돌려 `전체` 더블클릭을 재현. Compose가 이미 쓰는 코루틴 버전과 맞춤 |
 | Gradle Wrapper | 9.8.2 | 최신 안정판 |
@@ -183,8 +183,9 @@ composeApp/src/
 
 ## 데이터와 출처
 
-- 단어 28개(father 계열 11개, court 계열 9개, courier 계열 8개)와 관계 32개. 모든 단어와 관계에 출처 URL이 있으며, 단위 테스트가 이를 확인합니다.
-- 내용은 2026-10-25에 확인한 영어 Wiktionary 항목을 한국어로 요약·가공한 것입니다. 원문을 그대로 옮기지 않았고, 앱 상세 패널과 이 문서에 출처를 표시합니다.
+- 단어 53개와 관계 51개. 모든 단어와 관계에 출처 링크가 있으며, 단위 테스트가 이를 확인합니다.
+- 내용은 영어 Wiktionary 항목을 한국어로 요약·가공한 것이고, 일부 설명은 다른 사전과 자료도 참고했습니다. 원문을 그대로 옮기지 않았고, 앱 상세 패널과 이 문서에 출처를 표시합니다.
+- verse·versed·versatile, weave·web, wedge·potato wedges, prescient·science·omniscient 네 묶음은 Merriam-Webster와 American Heritage Dictionary 등으로 대조했습니다.
 - 중간 단계 형태(중세 영어 fader, 서게르만 조어 *fader 등)는 노드로 만들지 않고 관계 설명에 "~를 거쳐"로 적었습니다.
 - **courtier는 차용과 파생을 나눠 연결했습니다**: courtier ←(차용) 앵글로노르만어 corteour ←(파생) 고대 프랑스어 cort.
   - [Dictionary.com](https://www.dictionary.com/browse/courtier)(Random House)이 Wiktionary와 같은 경로를 따로 제시합니다. 앵글로프랑스어 courte(i)our는 고대 프랑스어 cortoyer(궁정에 출입하다, court에서 파생)에 -our를 붙인 말입니다. 두 출처가 일치해 중간 노드를 넣었습니다.
@@ -195,17 +196,18 @@ composeApp/src/
   - 고대 프랑스어 cortoisie는 원래 '기사도, 용맹'을 뜻했습니다.
   - courier는 고대 프랑스어 coreor 계열과 이탈리아어 corriere 계열이 합쳐진 말입니다.
   - 영어 horse가 라틴어 currere와 같은 어근 *ḱers-(달리다)에서 왔다는 견해는 Wiktionary가 "most likely"로 표기해 불확실한 연결로 표시했습니다.
-- 한계: 다음 사전은 접근이 막혀 자동 교차 검증을 하지 못했습니다. 그래서 관계는 대부분 Wiktionary 한 곳에만 근거합니다.
+- 초기 데이터를 수집할 때 다음 사전에 접근이 막혔습니다. 초기 관계는 대부분 Wiktionary 한 곳에 근거합니다.
   - Etymonline, Merriam-Webster, Collins: HTTP 403 또는 Cloudflare 보안 확인
   - CNRTL: 빈 페이지
   - MED(Middle English Dictionary): Cloudflare 확인 페이지
 
-  추가로 인용한 출처는 그림의 법칙(Grimm's law) 설명의 Wikipedia, courtier 관계의 Dictionary.com과 AND입니다.
+  추가로 인용한 출처는 그림의 법칙(Grimm's law) 설명의 Wikipedia, courtier 관계의 Dictionary.com과 AND, 위 네 묶음의 Merriam-Webster와 American Heritage Dictionary, web 설명의 월드 와이드 웹 제안서(w3.org)입니다.
 
 ### 데이터 라이선스
 
-- 어원 데이터(`SampleData.kt`의 한국어 설명)는 Wiktionary 항목을 요약·가공한 것입니다. 원 자료의 라이선스에 맞춰 [CC BY-SA 4.0(저작자표시-동일조건변경허락)](https://creativecommons.org/licenses/by-sa/4.0/deed.ko)으로 배포합니다.
-- 저작자는 각 항목의 Wiktionary 기여자입니다. 출처는 단어·관계마다 연결한 페이지이고, 변경 사항은 '한국어로 요약·가공'입니다. 앱 상세 패널에도 같은 고지와 라이선스 링크를 표시합니다.
+- 어원 데이터(`SampleData.kt`의 한국어 설명)는 [CC BY-SA 4.0(저작자표시-동일조건변경허락)](https://creativecommons.org/licenses/by-sa/4.0/deed.ko)으로 배포합니다. Wiktionary 항목을 요약·가공한 부분이 있어 원 자료의 라이선스에 맞췄습니다.
+- Wiktionary에서 요약·가공한 부분의 원저작자는 각 항목의 기여자입니다. 출처는 단어·관계마다 연결한 페이지이고, 변경 사항은 '한국어로 요약·가공'입니다. 앱 상세 패널에도 같은 고지와 라이선스 링크를 표시합니다.
+- 일부 설명은 다른 사전과 자료도 참고했으며, 그 출처도 단어·관계마다 연결했습니다.
 - 데이터를 수정해 다시 배포할 때도 같은 라이선스와 출처 표시를 유지해야 합니다.
 - 코드는 Apache License 2.0입니다(`LICENSE`). 저작권 표시와 예외(어원 데이터, 글꼴)는 `NOTICE`에 적었습니다.
 - 글꼴(Noto Serif, Noto Sans KR 부분집합)은 SIL Open Font License 1.1입니다(`licenses/`).
@@ -216,7 +218,7 @@ composeApp/src/
 
 | 항목 | 방법 | 결과 |
 |---|---|---|
-| 단위 테스트 42개 | `./gradlew :composeApp:wasmJsTest`, Karma + Chrome Headless 156 | 42개 통과, 실패 0. 두 손가락 제스처 회귀 테스트와 같은 단어 재검색 회귀 테스트는 수정 전 코드로 되돌리면 실패하는 것도 확인 |
+| 단위 테스트 44개 | `./gradlew :composeApp:wasmJsTest`, Karma + Chrome Headless 157 | 44개 통과, 실패 0(2026-11-13, JBR 25.0.4에서 다시 실행). 두 손가락 제스처 회귀 테스트와 같은 단어 재검색 회귀 테스트는 수정 전 코드로 되돌리면 실패하는 것도 확인 |
 | 배포용 Wasm 빌드 | `./gradlew :composeApp:wasmJsBrowserDistribution` | 성공. 앱 Wasm 2.9MB + skiko.wasm 8.6MB + JS 0.3MB. webpack이 경고 3건을 보고했지만 Gradle 출력에 내용이 나오지 않아 확인하지 못함 |
 | 개발용 웹 빌드 실행 | `wasmJsBrowserDevelopmentRun` | 성공 (http://localhost:8080) |
 | 시나리오 A: 검색과 탐색 | Claude 데스크톱 앱 내장 브라우저(Chromium 152), 배포 빌드, 시대 층 디자인 적용 후 다시 확인 | 통과. father 검색 → 4개 노드가 층·칸에 맞춰 표시 → fæder·*fadēr·pater·paternālis를 차례로 펼침(기존 노드 위치 유지, 새 노드가 보이도록 화면 이동) → 선택한 단어의 계보가 붉게, 상세 패널 계보가 단계로 표시 |
@@ -250,7 +252,7 @@ composeApp/src/
    - 자동 대체 글꼴에 없던 아래 첨자 숫자(₂, U+2082)와 결합용 아래 고리(r̥의 U+0325)는 데이터는 그대로 두고 화면에서만 아래 첨자 스타일 숫자와 `˳`(U+02F3)로 바꿔 표시합니다(`DisplayText.kt`).
 
    자동 대체 글꼴은 글자 범위별 조각으로 나뉘어 필요할 때 도착하므로, 처음 쓰는 글자는 그려진 뒤에 폭이 바뀔 수 있습니다. 범례 너비를 `IntrinsicSize.Max`로 맞췄을 때, 처음 펼친 범례에서 "어파 칸"이 두 줄로 꺾여 아래 줄과 겹쳤습니다(다시 펼치면 정상). 그래서 범례 너비는 내용대로 두었습니다.
-2. **다운로드 크기**: 그래픽 엔진 skiko.wasm만 8.6MB이고, 번들한 Noto Serif 1.9MB와 한글 부분집합 70KB가 더해집니다(배포 폴더 전체 15MB, 소스맵 포함). 첫 로드 비용이 큽니다. Noto Serif도 쓰는 글자만 받으면 크게 줄일 수 있지만, 가변 굵기(보통·세미볼드)가 유지되는지 확인하지 않아 그대로 두었습니다.
+2. **다운로드 크기**: 그래픽 엔진 skiko.wasm만 8.6MB이고, 번들한 Noto Serif 1.9MB와 한글 부분집합이 더해집니다(배포 폴더 전체 15MB, 소스맵 포함). 첫 로드 비용이 큽니다. Noto Serif도 쓰는 글자만 받으면 크게 줄일 수 있지만, 가변 굵기(보통·세미볼드)가 유지되는지 확인하지 않아 그대로 두었습니다.
 3. **Canvas 기반 렌더링**: 화면 전체가 하나의 `<canvas>`라 브라우저의 텍스트 선택·페이지 내 검색·기본 접근성 트리를 쓸 수 없습니다.
 4. **개발 서버**: 이 환경에서는 `wasmJsBrowserDevelopmentRun --continuous`가 파일 변경을 감지하지 않아, 코드를 바꿀 때마다 서버를 다시 시작했습니다(원인 미조사). 또 개발 서버는 시작할 때마다 기본 브라우저에 새 창을 엽니다. Kotlin Gradle 플러그인의 webpack 개발 서버 기본값으로 추정하며, 설정 파일에서 직접 확인하지는 않았습니다.
 5. **Material3**: CMP 1.10부터 Material3가 별도 버전으로 분리되었습니다. 1.12.2와 짝인 버전은 알파뿐입니다.

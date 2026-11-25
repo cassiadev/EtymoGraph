@@ -5,6 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class LexiconTest {
@@ -12,9 +13,30 @@ class LexiconTest {
 
     @Test
     fun sampleDataCitesASourceForEveryWordAndRelation() {
-        assertTrue(lexicon.words.size in 15..30)
         lexicon.words.forEach { w -> assertTrue(w.sourceUrls.isNotEmpty() && w.sourceUrls.all { it.startsWith("https://") }, w.id) }
         lexicon.relations.forEach { r -> assertTrue(r.sourceUrls.isNotEmpty() && r.sourceUrls.all { it.startsWith("https://") }, "$r") }
+    }
+
+    @Test
+    fun wordsAreSearchableAndReachTheirFamilyRoots() {
+        val expectedRoots = mapOf(
+            "verse" to "la:vertere",
+            "versed" to "la:vertere",
+            "versatile" to "la:vertere",
+            "weave" to "gem-pro:webana",
+            "web" to "gem-pro:webana",
+            "wedge" to "ang:wecg",
+            "potato wedges" to "ang:wecg",
+            "prescient" to "la:scire",
+            "science" to "la:scire",
+            "omniscient" to "la:scire",
+        )
+        expectedRoots.forEach { (word, root) ->
+            val result = assertNotNull(lexicon.search(word).firstOrNull(), word)
+            assertEquals(word, result.word)
+            assertEquals(Language.ENGLISH, result.language, word)
+            assertEquals(root, lexicon.ancestryOf(result.id).lastOrNull()?.toId, word)
+        }
     }
 
     @Test

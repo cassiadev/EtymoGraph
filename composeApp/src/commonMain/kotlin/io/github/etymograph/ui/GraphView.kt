@@ -25,6 +25,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -90,6 +93,7 @@ import kotlinx.coroutines.launch
 // GraphLayout.MIN_DX는 이 폭에 여백을 더한 값이다. 노드는 상자 없이 글자만 그리지만, 누르는 영역과 선이 닿는 자리는 이 크기다.
 internal val NodeWidth = 136.dp
 internal val NodeHeight = 62.dp
+private val HeadwordAutoSize = TextAutoSize.StepBased(minFontSize = 17.sp, maxFontSize = 21.sp, stepSize = 0.5.sp)
 
 /** 어파 칸이 노드 둘레로 띄우는 여백과 세로 범위(월드 좌표). 칸은 어파 조어 층부터 아래로 둔다. */
 private const val LANE_PAD = 14f
@@ -462,15 +466,20 @@ private fun WordNodeLabel(
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
+            BasicText(
                 displayTextOf(word.word),
-                fontFamily = LocalHeadwordFont.current,
-                fontSize = 21.sp,
-                fontWeight = FontWeight.SemiBold,
-                // 재구형은 * 표기에 더해 옅은 잉크로 문헌에 없는 형태임을 드러낸다.
-                color = if (word.reconstructed) Palette.InkMuted else Palette.Ink,
+                style = LocalTextStyle.current.copy(
+                    fontFamily = LocalHeadwordFont.current,
+                    fontWeight = FontWeight.SemiBold,
+                    // 재구형은 * 표기에 더해 옅은 잉크로 문헌에 없는 형태임을 드러낸다.
+                    color = if (word.reconstructed) Palette.InkMuted else Palette.Ink,
+                ),
+                autoSize = HeadwordAutoSize,
+                softWrap = false,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                // Skia는 말줄임 여부를 보고하지 않아 글자가 실제로 차지하는 폭을 기준으로 맞춘다.
+                // shortcut: 17sp로도 넘치는 표제어는 말줄임 없이 잘린다. 더 긴 단어가 생기면 노드 폭을 다시 정한다.
+                overflow = TextOverflow.Clip,
                 modifier = Modifier.drawBehind {
                     val y = size.height - 1.dp.toPx()
                     when {
@@ -555,7 +564,11 @@ private fun ZoomButton(label: String, description: String, fontSize: TextUnit = 
 
 @Composable
 private fun EmptyHint(onStart: (String) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier.padding(24.dp).widthIn(max = 440.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    // 내용이 영역보다 길면 FlowRow가 넘치는 버튼 줄을 그리지 않는다. 그때는 세로로 움직여 볼 수 있게 한다.
+    Column(
+        modifier.verticalScroll(rememberScrollState()).padding(24.dp).widthIn(max = 440.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text(
             "어디서부터 거슬러 올라갈까요?",
             fontFamily = LocalHeadwordFont.current,
@@ -571,8 +584,16 @@ private fun EmptyHint(onStart: (String) -> Unit, modifier: Modifier = Modifier) 
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.size(16.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("en:father" to "father", "en:court" to "court", "en:courier" to "courier").forEach { (id, label) ->
+        // Row에서는 좁은 화면에서 마지막 버튼이 글자 단위로 줄바꿈된다.
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            // 단어 계열마다 하나씩 둔다.
+            listOf(
+                "en:father" to "father", "en:court" to "court", "en:courier" to "courier",
+                "en:verse" to "verse", "en:weave" to "weave", "en:wedge" to "wedge", "en:science" to "science",
+            ).forEach { (id, label) ->
                 WordButton(label) { onStart(id) }
             }
         }

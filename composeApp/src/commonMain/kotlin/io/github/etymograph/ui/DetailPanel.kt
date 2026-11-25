@@ -143,7 +143,9 @@ fun DetailPanel(
         Section("출처") {
             word.sourceUrls.forEach { SourceLink(it) }
             Text(
-                "어원 정보는 Wiktionary 항목을 한국어로 요약·가공한 것으로, CC BY-SA 4.0(저작자표시-동일조건변경허락)에 따라 제공합니다.",
+                "어원 정보 중 Wiktionary 항목을 한국어로 요약·가공한 부분의 원저작자는 각 항목의 기여자입니다. " +
+                    "일부 설명은 다른 사전과 자료도 참고했으며, 출처는 단어와 관계마다 표시합니다.\n" +
+                    "어원 데이터는 CC BY-SA 4.0(저작자표시-동일조건변경허락)으로 배포합니다.",
                 color = Palette.InkMuted,
                 fontSize = 11.sp,
                 lineHeight = 16.sp,
@@ -299,11 +301,14 @@ private fun SourceLink(url: String, fontSize: Int = 13, label: String = sourceLa
 
 /** "https://en.wiktionary.org/wiki/père#French" → "Wiktionary · père (French)" */
 internal fun sourceLabelOf(url: String): String {
-    val (site, marker) = when {
-        "wiktionary.org" in url -> "Wiktionary" to "/wiki/"
-        "wikipedia.org" in url -> "Wikipedia" to "/wiki/"
-        "anglo-norman.net" in url -> "Anglo-Norman Dictionary" to "/entry/"
-        "dictionary.com" in url -> "Dictionary.com" to "/browse/"
+    val host = url.substringAfter("://").substringBefore('/').removePrefix("www.")
+    val (site, marker) = when (host) {
+        "en.wiktionary.org" -> "Wiktionary" to "/wiki/"
+        "en.wikipedia.org" -> "Wikipedia" to "/wiki/"
+        "anglo-norman.net" -> "Anglo-Norman Dictionary" to "/entry/"
+        "dictionary.com" -> "Dictionary.com" to "/browse/"
+        "ahdictionary.com" -> "American Heritage Dictionary" to "?q="
+        "merriam-webster.com" -> "Merriam-Webster" to "/dictionary/"
         else -> return url
     }
     val title = url.substringAfter(marker).replace("%27", "'").replace('_', ' ')
